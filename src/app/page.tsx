@@ -1,10 +1,15 @@
+
 'use client';
 
+import GameContainer from '@/components/game-container';
 import Link from 'next/link';
 import Orb from "@/components/orb/Orb"
 
 export default function HomePage() {
   return (
+<main className="relative h-screen w-full overflow-hidden">
+      <GameContainer />
+    </main>
     <div
       className="min-h-screen bg-cover bg-center flex items-center justify-center text-white px-4"
       style={{ backgroundImage: 'url("/bkg.png")' }}
@@ -36,6 +41,6 @@ export default function HomePage() {
   </div>
 </div>
       </div>
-   
+
   );
 }

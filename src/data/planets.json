@@ -1,0 +1,125 @@
+{
+  "planets": [
+    {
+      "id": "biology",
+      "name": "Biology",
+      "subject": "Biology",
+      "color": "#4CAF50",
+      "image": "/planets/biology.png",
+      "connections": ["chemistry", "geography"],
+      "position": { "x": 20, "y": 30 },
+      "size": 64,
+      "glowColor": "rgba(76, 175, 80, 0.3)"
+    },
+    {
+      "id": "chemistry",
+      "name": "Chemistry",
+      "subject": "Chemistry",
+      "color": "#9C27B0",
+      "image": "/planets/chemistry.png",
+      "connections": ["biology", "physics"],
+      "position": { "x": 40, "y": 30 },
+      "size": 68,
+      "glowColor": "rgba(156, 39, 176, 0.3)"
+    },
+    {
+      "id": "arts",
+      "name": "Arts",
+      "subject": "Arts",
+      "color": "#E91E63",
+      "image": "/planets/arts.png",
+      "connections": ["literature", "history"],
+      "position": { "x": 70, "y": 20 },
+      "size": 60,
+      "glowColor": "rgba(233, 30, 99, 0.3)"
+    },
+    {
+      "id": "music",
+      "name": "Music",
+      "subject": "Music",
+      "color": "#FFC107",
+      "image": "/planets/music.png",
+      "connections": ["arts"],
+      "position": { "x": 85, "y": 10 },
+      "size": 56,
+      "glowColor": "rgba(255, 193, 7, 0.3)"
+    },
+    {
+      "id": "physics",
+      "name": "Physics",
+      "subject": "Physics",
+      "color": "#2196F3",
+      "image": "/planets/physics.png",
+      "connections": ["chemistry", "mathematics"],
+      "position": { "x": 40, "y": 50 },
+      "size": 72,
+      "glowColor": "rgba(33, 150, 243, 0.3)"
+    },
+    {
+      "id": "computer",
+      "name": "Computer Science",
+      "subject": "Computer Science",
+      "color": "#3F51B5",
+      "image": "/planets/computer.png",
+      "connections": ["mathematics"],
+      "position": { "x": 60, "y": 70 },
+      "size": 66,
+      "glowColor": "rgba(63, 81, 181, 0.3)"
+    },
+    {
+      "id": "history",
+      "name": "History",
+      "subject": "History",
+      "color": "#795548",
+      "image": "/planets/history.png",
+      "connections": ["arts", "geography"],
+      "position": { "x": 70, "y": 40 },
+      "size": 62,
+      "glowColor": "rgba(121, 85, 72, 0.3)"
+    },
+    {
+      "id": "literature",
+      "name": "Literature",
+      "subject": "Literature",
+      "color": "#F44336",
+      "image": "/planets/literature.png",
+      "connections": ["arts"],
+      "position": { "x": 85, "y": 30 },
+      "size": 58,
+      "glowColor": "rgba(244, 67, 54, 0.3)"
+    },
+    {
+      "id": "mathematics",
+      "name": "Mathematics",
+      "subject": "Mathematics",
+      "color": "#607D8B",
+      "image": "/planets/mathematics.png",
+      "connections": ["physics", "computer"],
+      "position": { "x": 50, "y": 70 },
+      "size": 74,
+      "glowColor": "rgba(96, 125, 139, 0.3)"
+    },
+    {
+      "id": "geography",
+      "name": "Geography",
+      "subject": "Geography",
+      "color": "#009688",
+      "image": "/planets/geography.png",
+      "connections": ["biology", "history"],
+      "position": { "x": 20, "y": 60 },
+      "size": 64,
+      "glowColor": "rgba(0, 150, 136, 0.3)"
+    }
+  ],
+  "connections": [
+    { "from": "biology", "to": "chemistry" },
+    { "from": "biology", "to": "geography" },
+    { "from": "chemistry", "to": "physics" },
+    { "from": "arts", "to": "literature" },
+    { "from": "arts", "to": "history" },
+    { "from": "music", "to": "arts" },
+    { "from": "physics", "to": "mathematics" },
+    { "from": "computer", "to": "mathematics" },
+    { "from": "history", "to": "geography" }
+  ]
+}
