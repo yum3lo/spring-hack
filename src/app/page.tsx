@@ -1,9 +1,9 @@
-import LoginPage from "./auth/login/page"
+import GameContainer from '@/components/game-container';
 
 export default function Home() {
   return (
-    <div>
-     <LoginPage/>
-    </div>
+    <main className="relative h-screen w-full overflow-hidden">
+      <GameContainer />
+    </main>
   );
 }
