@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import Orb from '@/components/orb/Orb'; 
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,8 +30,9 @@ export default function LoginPage() {
   
       console.log('Logged in! Token:', token);
   
-      // Optionally store token (for future requests)
       localStorage.setItem('token', token);
+
+      router.push('/game');
   
     } catch (error) {
       console.error('Login error:', error);

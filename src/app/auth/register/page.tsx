@@ -2,10 +2,13 @@
 
 import { useState } from 'react';
 import Orb from '@/components/orb/Orb';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
+  
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +33,7 @@ export default function RegisterPage() {
   
       localStorage.setItem('token', token);
   
-      alert('Registration successful! ');
+      router.push('/game');
     } catch (error) {
       console.error('Registration error:', error);
       alert('Registration failed. Please try a different username.');
