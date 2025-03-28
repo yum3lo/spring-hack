@@ -1,9 +1,9 @@
-
 'use client';
 
 import GameContainer from '@/components/game-container';
 import Link from 'next/link';
 import Orb from "@/components/orb/Orb"
+import {TypewriterEffectSmoothDemo} from "@/components/hometext/hometext"
 
 export default function HomePage() {
   return (
@@ -23,10 +23,12 @@ export default function HomePage() {
                 forceHoverState={false}
               />
             </div>
-            <div className="flex flex-col items-center gap-6 w-full max-w-2xl mx-auto px-4">
-  <div className="text-4xl font-medium text-center w-full margin">To get on board of QueShip, please:</div>
   
-  <div className="flex gap-4 w-full justify-center">
+            
+            
+            <div className="flex flex-col items-center gap-6 w-full max-w-2xl mx-auto px-4">
+            <TypewriterEffectSmoothDemo/>
+            <div className="flex gap-4 w-full justify-center">
     <Link
       href="/auth/register"
       className="px-8 py-3 text-lg font-medium text-white bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-gray-900 transition-colors duration-300 w-48 text-center"
