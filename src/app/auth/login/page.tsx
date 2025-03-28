@@ -4,12 +4,12 @@ import { useState } from 'react';
 import Orb from '@/components/orb/Orb'; 
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Logging in:', { email, password });
+    console.log('Logging in:', { username, password });
   };
 
   return (
@@ -32,13 +32,13 @@ export default function LoginPage() {
   </h2>
 
   <input
-    type="email"
-    placeholder="Email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    required
-    className="w-full mb-4 p-2 border border-gray-600 rounded bg-transparent text-white placeholder-gray-400"
-  />
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          className="w-full mb-4 p-2 border border-gray-600 rounded bg-transparent text-white placeholder-gray-400"
+        />
 
   <input
     type="password"
@@ -58,7 +58,7 @@ export default function LoginPage() {
 
   <div className="mt-4 text-center text-sm text-white">
     Don’t have an account?{' '}
-    <a href="/auth/register" className="underline hover:text-blue-400">
+    <a href="/auth/register" className="underline hover:text-purple-600">
       Sign up
     </a>
   </div>

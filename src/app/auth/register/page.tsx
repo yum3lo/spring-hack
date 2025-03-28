@@ -43,23 +43,6 @@ export default function RegisterPage() {
         />
 
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full mb-4 p-2 border border-gray-600 rounded bg-transparent text-white placeholder-gray-400"
-        />
-
-        <input
-          type="date"
-          value={dob}
-          onChange={(e) => setDob(e.target.value)}
-          required
-          className="w-full mb-4 p-2 border border-gray-600 rounded bg-transparent text-white placeholder-gray-400"
-        />
-
-        <input
           type="password"
           placeholder="Password"
           value={password}
@@ -70,14 +53,14 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          className="w-full bg-purple-600 text-white font-semibold py-2 px-4 rounded hover:bg-purple-700 transition duration-200"
+          className="w-full bg-green-700 text-white font-semibold py-2 px-4 rounded hover:bg-green-800 transition duration-200"
         >
           Create Account
         </button>
 
         <div className="mt-4 text-center text-sm text-white">
           Already have an account?{' '}
-          <a href="/auth/login" className="underline hover:text-blue-400">
+          <a href="/auth/login" className="underline hover:text-green-600">
             Log in
           </a>
         </div>
