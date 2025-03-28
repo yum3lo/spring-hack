@@ -7,10 +7,36 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Logging in:', { username, password });
+  
+    try {
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+  
+      const data = await response.json();
+      const token = data.token || data.accessToken || data.bearer || data; 
+  
+      console.log('Logged in! Token:', token);
+  
+      // Optionally store token (for future requests)
+      localStorage.setItem('token', token);
+  
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login failed. Please check your credentials.');
+    }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black relative overflow-hidden">
