@@ -13,7 +13,7 @@ import { Questions } from '@/types/questions';
 const planetsData: PlanetsData = require('../data/planets.json');
 
 type GameState = {
-  currentScreen: 'space' | 'planet';
+  currentScreen: 'space' | 'planet' | 'loading';
   currentPlanet: Planet | null;
   lastVisitedPlanet: Planet | null;
   rocketPosition: Position;
@@ -119,13 +119,26 @@ export default function GameContainer() {
 
   const handleStartAdventure = () => {
     if (!gameState.currentPlanet) return;
-    setIsGeneratingQuestions(true);
+    setGameState(prev => ({
+      ...prev,
+      currentScreen: 'loading'
+    }));
   };
 
   const handleQuestionsGenerated = (questions: Questions) => {
     setGeneratedQuestions(questions);
-    setIsGeneratingQuestions(false);
     setShowGameScene(true);
+    setGameState(prev => ({
+      ...prev,
+      currentScreen: 'planet'
+    }));
+  };
+
+  const handleLoadingBack = () => {
+    setGameState(prev => ({
+      ...prev,
+      currentScreen: 'planet'
+    }));
   };
 
   const returnToSpace = () => {
@@ -146,6 +159,16 @@ export default function GameContainer() {
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url("/bkg.png")' }} />
       <div className="absolute inset-0 bg-black/30" />
 
+      {/* Loading Screen */}
+      {gameState.currentScreen === 'loading' && gameState.currentPlanet && (
+        <LoadingScreen 
+          planet={gameState.currentPlanet}
+          loadingMessage={`Preparing ${gameState.currentPlanet.subject} Challenge`}
+          onComplete={handleQuestionsGenerated}
+          onBack={handleLoadingBack}
+        />
+      )}
+      
       {/* Settings */}
       <button 
         className={styles.settingsButton}

@@ -1,79 +1,93 @@
-// components/loading-screen.tsx
 'use client';
 
 import { useEffect } from 'react';
+import Image from 'next/image';
 import { Planet } from '@/types/planets';
-import { Questions } from '@/types/questions';
+import { Question, Questions, QuestionsWrapper } from '@/types/questions';
 
-export default function LoadingScreen({ planet, onComplete }: {
+interface LoadingScreenProps {
   planet: Planet;
+  loadingMessage?: string;
   onComplete: (questions: Questions) => void;
-}) {
+  onBack?: () => void;
+}
+
+export default function LoadingScreen({ 
+  planet, 
+  loadingMessage, 
+  onComplete, 
+  onBack 
+}: LoadingScreenProps) {
   useEffect(() => {
-    const generateAndSaveQuestions = async () => {
+    const generateQuestions = async () => {
       try {
         // Get settings from localStorage
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
         const { age, nationality, language } = settings;
 
         // Create the prompt
-        const prompt = `Ask 10 multiple choice questions and their right answers in json format about ${planet.subject} to ask for a ${age} year old who is ${nationality} in ${language}. 
-        Return only valid JSON in this exact format:
-        {
-          "questions": [
+        const prompt = `Generate 10 multiple choice questions about ${planet.subject} 
+        for a ${age} year old ${nationality} student in ${language}. 
+        Format as JSON with question, options, and correctAnswer.`;
+
+        // Simulate API call (replace with actual fetch)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Mock response - adjust based on your actual API response format
+        const mockResponse: QuestionsWrapper = {
+          questions: [
             {
-              "question": "question text",
-              "options": ["option1", "option2", "option3", "option4"],
-              "correctAnswer": 0
+              question: `What is the capital of ${planet.name}?`,
+              options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+              correctAnswer: 0
             }
           ]
-        }`;
+        };
 
-        // Call your AI API
-        const response = await fetch('/api/generate-questions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ prompt }),
-        });
-
-        if (!response.ok) throw new Error('Failed to generate questions');
-
-        const data = await response.json();
-        const questions = data.questions || [];
-        
-        // Save directly to questions.json
-        const saveResponse = await fetch('/api/save-questions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            planetId: planet.id,
-            questions,
-          }),
-        });
-
-        if (!saveResponse.ok) throw new Error('Failed to save questions');
-
+        // Convert to Questions array format if needed
+        const questions: Questions = mockResponse.questions || [];
         onComplete(questions);
       } catch (error) {
-        console.error('Error:', error);
-        // Fallback to empty questions
-        onComplete([]);
+        console.error('Error generating questions:', error);
+        onComplete([]); // Return empty array on error
       }
     };
 
-    generateAndSaveQuestions();
+    generateQuestions();
   }, [planet, onComplete]);
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-        <h2 className="text-xl font-bold text-white mb-2">Preparing Your Adventure</h2>
-        <p className="text-gray-300">Generating questions about {planet.subject}...</p>
+      <div className="text-center p-6 rounded-lg max-w-md w-full">
+        {/* Back button (optional) */}
+        {onBack && (
+          <button 
+            onClick={onBack}
+            className="absolute top-4 left-4 p-2 rounded-full hover:bg-gray-700/50 transition-colors"
+          >
+            ← Cancel
+          </button>
+        )}
+        
+        {/* Loading animation */}
+        <div className="relative w-64 h-64 mx-auto mb-6">
+          <Image
+            src="/loading-screen.gif"
+            alt="Loading"
+            fill
+            className="object-contain"
+            unoptimized
+            priority
+          />
+        </div>
+        
+        {/* Loading message */}
+        <h2 className="text-xl font-bold text-white mb-2">
+          {loadingMessage || `Preparing ${planet.subject} Adventure`}
+        </h2>
+        <p className="text-gray-300">
+          Generating questions about {planet.name}...
+        </p>
       </div>
     </div>
   );
