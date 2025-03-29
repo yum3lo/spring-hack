@@ -1,0 +1,11 @@
+{
+    "settings": [
+    {
+        "soundEnabled": true,
+        "age": "18",
+        "nationality": "ROMANIAN",
+        "language": "ENGLISH",
+        "timerEnabled": true
+    }
+    ]
+}

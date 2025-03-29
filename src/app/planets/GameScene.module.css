@@ -41,6 +41,18 @@
   padding: 0 20px;
 }
 
+.welcomeMessage {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  color: #ffffff;
+  font-size: clamp(30px, 5vw, 28px);
+  text-align: center;
+  padding: 0 20px;
+}
+
 /* GameScene.module.css */
 .answersContainer {
   position: absolute;
@@ -91,6 +103,7 @@
 }
 
 .statusItem {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;

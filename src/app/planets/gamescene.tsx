@@ -42,12 +42,13 @@ const GameScene = ({ planet, onClose}: GameSceneProps) => {
   const [timeLeft, setTimeLeft] = useState(30);
   const [score, setScore] = useState(0);
   const [money, setMoney] = useState(100);
-  const [gameActive, setGameActive] = useState(true);
+  const [gameActive, setGameActive] = useState(false); // Start inactive for welcome message
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [rewardPopup, setRewardPopup] = useState({ show: false, amount: 0 });
   const [showSettings, setShowSettings] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true); // New state for welcome message
 
   // Load questions
   useEffect(() => {
@@ -67,11 +68,21 @@ const GameScene = ({ planet, onClose}: GameSceneProps) => {
     }
   }, []);
 
+  // Show welcome message for 3 seconds before starting
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWelcome(false);
+      setGameActive(true);
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // Timer countdown (respects timer setting)
   useEffect(() => {
     let timer: NodeJS.Timeout;
     
-    if (gameActive && !loading && settings.timerEnabled) {
+    if (gameActive && !loading && !showWelcome && settings.timerEnabled) {
       timer = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
@@ -86,7 +97,7 @@ const GameScene = ({ planet, onClose}: GameSceneProps) => {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [gameActive, loading, settings.timerEnabled]);
+  }, [gameActive, loading, settings.timerEnabled, showWelcome]);
 
   const handleTimeOut = () => {
     setGameActive(false);
@@ -95,7 +106,7 @@ const GameScene = ({ planet, onClose}: GameSceneProps) => {
   };
 
   const handleAnswer = (selectedOption: string) => {
-    if (!gameActive || loading) return;
+    if (!gameActive || loading || showWelcome) return;
     
     setSelectedAnswer(selectedOption);
     const currentQuestion = questions[currentQuestionIndex];
@@ -196,22 +207,24 @@ const GameScene = ({ planet, onClose}: GameSceneProps) => {
       </div>
       
       {/* Game Status Bar */}
-      <div className={styles.statusBar}>
-        {settings.timerEnabled && (
-          <div className={`${styles.statusItem} ${timeLeft <= 5 ? styles.timeWarning : ''}`}>
-            <Image src="/images/timer.png" width={60} height={60} alt="Time" />
-            <span>{timeLeft}s</span>
+      {!showWelcome && (
+        <div className={styles.statusBar}>
+          {settings.timerEnabled && (
+            <div className={`${styles.statusItem} ${timeLeft <= 5 ? styles.timeWarning : ''}`}>
+              <Image src="/images/timer.png" width={60} height={60} alt="Time" />
+              <span>{timeLeft}s</span>
+            </div>
+          )}
+          <div className={styles.statusItem}>
+            <Image src="/images/points.png" width={60} height={60} alt="Score" />
+            <span>{score}</span>
           </div>
-        )}
-        <div className={styles.statusItem}>
-          <Image src="/images/points.png" width={60} height={60} alt="Score" />
-          <span>{score}</span>
+          <div className={styles.statusItem}>
+            <Image src="/images/coin.png" width={60} height={60} alt="Money" />
+            <span>${money}</span>
+          </div>
         </div>
-        <div className={styles.statusItem}>
-          <Image src="/images/coin.png" width={60} height={60} alt="Money" />
-          <span>${money}</span>
-        </div>
-      </div>
+      )}
       
       {/* Character Display */}
       <div className={styles.characterDisplay}>
@@ -247,30 +260,40 @@ const GameScene = ({ planet, onClose}: GameSceneProps) => {
           />
         </div>
         
-        <div className={styles.questionText}>{currentQuestion.question}</div>
-        
-        <div className={styles.answersContainer}>
-          {currentQuestion.options.map((option, index) => {
-            const isCorrect = option === correctAnswer;
-            const isSelected = option === selectedAnswer;
-            const showCorrect = !gameActive && isCorrect;
-            const showIncorrect = !gameActive && isSelected && !isCorrect;
+        {showWelcome ? (
+          <div className={styles.welcomeMessage}>
+            <h2>Hello Traveler,</h2>
+            <p>You have arrived on {planet.name}. We pride ourselves on our {planet.subject} knowledge.</p>
+            <p>Answer my questions and you will get a reward!</p>
+          </div>
+        ) : (
+          <>
+            <div className={styles.questionText}>{currentQuestion.question}</div>
             
-            return (
-              <PixelCard 
-                key={index}
-                variant={showCorrect ? "blue" : showIncorrect ? "pink" : "default"}
-                className={`${styles.answerCard} ${!gameActive ? styles.disabled : ''}`}
-                onClick={() => handleAnswer(option)}
-              >
-                <div className={styles.answerText}>{option}</div>
-                {showCorrect && (
-                  <div className={styles.correctIndicator}>✓</div>
-                )}
-              </PixelCard>
-            );
-          })}
-        </div>
+            <div className={styles.answersContainer}>
+              {currentQuestion.options.map((option, index) => {
+                const isCorrect = option === correctAnswer;
+                const isSelected = option === selectedAnswer;
+                const showCorrect = !gameActive && isCorrect;
+                const showIncorrect = !gameActive && isSelected && !isCorrect;
+                
+                return (
+                  <PixelCard 
+                    key={index}
+                    variant={showCorrect ? "blue" : showIncorrect ? "pink" : "default"}
+                    className={`${styles.answerCard} ${!gameActive ? styles.disabled : ''}`}
+                    onClick={() => handleAnswer(option)}
+                  >
+                    <div className={styles.answerText}>{option}</div>
+                    {showCorrect && (
+                      <div className={styles.correctIndicator}>✓</div>
+                    )}
+                  </PixelCard>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
