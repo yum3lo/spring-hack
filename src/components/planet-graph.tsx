@@ -2,57 +2,29 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { Planet, PlanetsData } from '../types/planets';
 
-// Define types for your planet data
-type PlanetPosition = {
-  x: number;
-  y: number;
-};
-
-interface PlanetGraphProps {
+type PlanetGraphProps = {
   onPlanetSelect: (planet: Planet) => void;
-  visitedPlanets: string[]; // Add this line
-}
-
-type Planet = {
-  id: string;
-  name: string;
-  subject: string;
-  color: string;
-  image: string;
-  connections: string[];
-  position: PlanetPosition;
-  size: number;
-  glowColor: string;
+  availablePlanets: Planet[];
+  lastVisitedPlanet: Planet | null;
 };
 
-type PlanetConnection = {
-  from: string;
-  to: string;
-};
+const planetsData = require('../data/planets.json');
 
-type PlanetsData = {
-  planets: Planet[];
-  connections: PlanetConnection[];
-};
-
-// Import with type assertion
-const planetsData: PlanetsData = require('../data/planets.json');
-
-// Define props type
-interface PlanetGraphProps {
-  onPlanetSelect: (planet: Planet) => void;
-}
-
-export default function PlanetGraph({ onPlanetSelect }: PlanetGraphProps) {
+export default function PlanetGraph({ 
+  onPlanetSelect, 
+  availablePlanets,
+  lastVisitedPlanet 
+}: PlanetGraphProps) {
   const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
-  
+
   return (
     <div className="relative w-full h-[80vh] bg-space-bg">
       <svg className="absolute w-full h-full">
-        {planetsData.connections.map((conn, index) => {
-          const fromPlanet = planetsData.planets.find(p => p.id === conn.from);
-          const toPlanet = planetsData.planets.find(p => p.id === conn.to);
+        {planetsData.connections.map((conn: any, index: number) => {
+          const fromPlanet = planetsData.planets.find((p: Planet) => p.id === conn.from);
+          const toPlanet = planetsData.planets.find((p: Planet) => p.id === conn.to);
           
           if (!fromPlanet || !toPlanet) return null;
           
@@ -71,44 +43,50 @@ export default function PlanetGraph({ onPlanetSelect }: PlanetGraphProps) {
         })}
       </svg>
 
-      {planetsData.planets.map(planet => (
-        <div
-          key={planet.id}
-          className="absolute flex flex-col items-center transition-all duration-300 cursor-pointer"
-          style={{
-            left: `${planet.position.x}%`,
-            top: `${planet.position.y}%`,
-            transform: hoveredPlanet === planet.id 
-              ? 'translate(-50%, -50%) scale(1.2)' 
-              : 'translate(-50%, -50%)',
-            filter: hoveredPlanet === planet.id 
-              ? `drop-shadow(0 0 8px ${planet.glowColor})`
-              : `drop-shadow(0 0 4px ${planet.glowColor})`
-          }}
-          onMouseEnter={() => setHoveredPlanet(planet.id)}
-          onMouseLeave={() => setHoveredPlanet(null)}
-          onClick={() => onPlanetSelect(planet)}
-        >
-          <div 
-            className="rounded-full transition-all duration-300"
+      {planetsData.planets.map((planet: Planet) => {
+        const isAvailable = availablePlanets.some(p => p.id === planet.id);
+        const isLastVisited = lastVisitedPlanet?.id === planet.id;
+        
+        return (
+          <div
+            key={planet.id}
+            className={`absolute flex flex-col items-center transition-all duration-300 ${
+              isAvailable ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+            } ${
+              isLastVisited ? 'shadow-[0_0_15px_5px_rgba(255,255,255,0.3)]' : ''
+            }`}
             style={{
-              width: `${planet.size}px`,
-              height: `${planet.size}px`
+              left: `${planet.position.x}%`,
+              top: `${planet.position.y}%`,
+              transform: hoveredPlanet === planet.id 
+                ? 'translate(-50%, -50%) scale(1.2)' 
+                : 'translate(-50%, -50%)'
             }}
+            onMouseEnter={() => isAvailable && setHoveredPlanet(planet.id)}
+            onMouseLeave={() => setHoveredPlanet(null)}
+            onClick={() => isAvailable && onPlanetSelect(planet)}
           >
-            <Image
-              src={planet.image}
-              alt={planet.name}
-              width={planet.size}
-              height={planet.size}
-              className="w-full h-full object-contain"
-            />
+            <div 
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: `${planet.size}px`,
+                height: `${planet.size}px`
+              }}
+            >
+              <Image
+                src={planet.image}
+                alt={planet.name}
+                width={planet.size}
+                height={planet.size}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="text-white text-lg font-mono">
+              {planet.name}
+            </span>
           </div>
-          <span className="text-white text-lg font-mono">
-            {planet.name}
-          </span>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
