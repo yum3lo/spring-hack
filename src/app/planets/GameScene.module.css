@@ -1,0 +1,333 @@
+.gameScene {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'DotGothic16', sans-serif;
+}
+
+.backgroundContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.questionBoxContainer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1920px;
+  height: 50vh;
+  min-height: 546px;
+}
+
+.questionBoxImage {
+  object-fit: contain;
+}
+
+.questionText {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  color: #ffffff;
+  font-size: clamp(30px, 5vw, 28px);
+  text-align: center;
+  padding: 0 20px;
+}
+
+/* GameScene.module.css */
+.answersContainer {
+  position: absolute;
+  bottom: 30%;
+  left: 5%;
+  width: 90%;
+  height: 20%; /* Adjust this to control how much space answers take */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px; /* Slightly larger gap */
+  padding: 0 3%; /* More padding */
+}
+
+.answerCard {
+  height: 100%;
+  min-height: 70px; /* Slightly taller */
+  border-radius: 12px; /* Consistent rounding */
+  overflow: hidden; /* Ensure contents respect rounding */
+}
+
+.answerText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff !important;
+  font-size: clamp(30px, 5vw, 28px) !important;
+  text-align: center !important;
+  padding: 0 10px !important; 
+}
+
+/* Status Bar */
+.statusBar {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+.statusBar:has(> :only-child) {
+  justify-content: center;
+}
+
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 25px;
+}
+
+/* Answer Card States */
+.answerCard.disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.rewardBadge {
+  position: absolute;
+  bottom: 15px;
+  right: 30px;
+  background: #4CAF50;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 25px;
+  animation: pulse 0.5s 3;
+}
+
+.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+  font-family: 'DotGothic16', sans-serif;
+  text-align: center;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.errorMessage {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff5252;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: 'DotGothic16', sans-serif;
+  z-index: 100;
+  animation: fadeInOut 3s forwards;
+}
+
+.timeWarning span {
+  color: #ff5252;
+  animation: blink 1s infinite;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Answer states */
+.answerCard.correct {
+  background-color: #4CAF50 !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.7);
+}
+
+.answerCard.incorrect {
+  background-color: #f44336 !important;
+}
+
+.rewardPopup {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: #4CAF50;
+  font-size: 2rem;
+  font-family: 'DotGothic16', sans-serif;
+  padding: 15px 30px;
+  border-radius: 10px;
+  z-index: 1000;
+  animation: popIn 0.5s, fadeOut 0.5s 1.5s forwards;
+}
+
+@keyframes popIn {
+  0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
+  80% { transform: translateX(-50%) scale(1.1); }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; }
+}
+
+/* PixelCard variants - ensure these match your PixelCard component */
+:global(.pixel-card.blue) {
+  background-color: #2196F3 !important;
+}
+
+:global(.pixel-card.red) {
+  background-color: #f44336 !important;
+}
+
+.statusItemTime span {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.statusItemTime.warning span {
+  color: #ff5252;
+  animation: blink 1s infinite;
+}
+
+/* Settings Button */
+.settingsButton {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.settingsButton:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: rotate(30deg);
+}
+
+/* Update answer card colors */
+:global(.pixel-card.green) {
+  background-color: #4CAF50 !important;
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
+}
+
+:global(.pixel-card.red) {
+  background-color: #f44336 !important;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .answersContainer {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    height: 45%;
+    gap: 10px;
+  }
+
+  .answerCard {
+    min-height: 65px;
+  }
+}
+
+@media (max-width: 480px) {
+  .answersContainer {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    height: 50%;
+    gap: 8px;
+  }
+
+  .answerCard {
+    min-height: 50px;
+  }
+}
+
+.answerCard:hover {
+  transform: scale(1.05);
+}
+
+.answerText {
+  font-size: clamp(12px, 1.8vw, 18px);
+  text-align: center;
+  padding: 8px;
+  width: 90%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .answersGrid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    height: 45%;
+    gap: 8px;
+  }
+  
+  .questionText {
+    top: 15%;
+  }
+}
+
+@media (max-width: 480px) {
+  .questionBoxContainer {
+    height: 55vh;
+  }
+  
+  .answersGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    height: 50%;
+  }
+  
+  .answerCard {
+    min-height: 50px;
+  }
+}

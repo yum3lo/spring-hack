@@ -1,130 +1,262 @@
-// GameScene.ts
-class GameScene {
-    private canvas: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
-    private scale: number;
-    
-    constructor(canvas: HTMLCanvasElement, scale: number = 5) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d')!;
-        this.scale = scale;
-        
-        // Set canvas size
-        this.canvas.width = 320;
-        this.canvas.height = 240;
-        
-        // Scale up for pixelated effect
-        this.canvas.style.width = `${this.canvas.width * this.scale}px`;
-        this.canvas.style.height = `${this.canvas.height * this.scale}px`;
-        this.canvas.style.imageRendering = 'pixelated';
-        
-        this.ctx.imageSmoothingEnabled = false;
-    }
-    
-    public render() {
-        // Clear canvas
-        this.ctx.fillStyle = '#6b8cff';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        // Draw ground
-        this.ctx.fillStyle = '#5c4a36';
-        this.ctx.fillRect(0, this.canvas.height - 40, this.canvas.width, 40);
-        
-        // Draw 4 boxes at the bottom
-        const boxColors = ['#ff5555', '#55ff55', '#5555ff', '#ffff55'];
-        const boxWidth = 40;
-        const boxHeight = 30;
-        const boxY = this.canvas.height - boxHeight - 5;
-        const totalBoxWidth = boxWidth * 4 + 15 * 3; // 4 boxes with 15px spacing
-        const startX = (this.canvas.width - totalBoxWidth) / 2;
-        
-        for (let i = 0; i < 4; i++) {
-            this.ctx.fillStyle = boxColors[i];
-            this.ctx.fillRect(startX + i * (boxWidth + 15), boxY, boxWidth, boxHeight);
-            
-            // Box details
-            this.ctx.fillStyle = '#000000';
-            this.ctx.fillRect(startX + i * (boxWidth + 15) + 10, boxY + 5, 5, 5);
-            this.ctx.fillRect(startX + i * (boxWidth + 15) + 25, boxY + 5, 5, 5);
-        }
-        
-        // Draw left character (simple pixel art)
-        this.drawCharacter(40, this.canvas.height - 80, '#ff9999', true);
-        
-        // Draw right character
-        this.drawCharacter(this.canvas.width - 60, this.canvas.height - 80, '#9999ff', false);
-        
-        // Draw speech bubbles
-        this.drawSpeechBubble(40, this.canvas.height - 120, "Hi there!", true);
-        this.drawSpeechBubble(this.canvas.width - 60, this.canvas.height - 120, "Hello!", false);
-    }
-    
-    private drawCharacter(x: number, y: number, color: string, isLeft: boolean) {
-        // Head
-        this.ctx.fillStyle = color;
-        this.ctx.fillRect(x, y, 20, 20);
-        
-        // Eyes
-        this.ctx.fillStyle = '#000000';
-        const eyeOffset = isLeft ? 4 : 10;
-        this.ctx.fillRect(x + eyeOffset, y + 5, 3, 3);
-        this.ctx.fillRect(x + eyeOffset + 5, y + 5, 3, 3);
-        
-        // Body
-        this.ctx.fillStyle = color;
-        this.ctx.fillRect(x - 5, y + 20, 30, 30);
-        
-        // Arms
-        this.ctx.fillRect(x - 15, y + 25, 10, 5);
-        this.ctx.fillRect(x + 30, y + 25, 10, 5);
-        
-        // Legs
-        this.ctx.fillRect(x, y + 50, 8, 20);
-        this.ctx.fillRect(x + 12, y + 50, 8, 20);
-    }
-    
-    private drawSpeechBubble(x: number, y: number, text: string, isLeft: boolean) {
-        const width = 80;
-        const height = 40;
-        const pointerHeight = 10;
-        
-        // Adjust position based on which side
-        const bubbleX = isLeft ? x : x - width;
-        
-        // Bubble body
-        this.ctx.fillStyle = '#ffffff';
-        this.ctx.beginPath();
-        this.ctx.roundRect(bubbleX, y, width, height, 5);
-        this.ctx.fill();
-        this.ctx.strokeStyle = '#000000';
-        this.ctx.stroke();
-        
-        // Bubble pointer
-        this.ctx.beginPath();
-        if (isLeft) {
-            this.ctx.moveTo(bubbleX + 20, y + height);
-            this.ctx.lineTo(bubbleX + 30, y + height);
-            this.ctx.lineTo(bubbleX + 25, y + height + pointerHeight);
-        } else {
-            this.ctx.moveTo(bubbleX + width - 20, y + height);
-            this.ctx.lineTo(bubbleX + width - 30, y + height);
-            this.ctx.lineTo(bubbleX + width - 25, y + height + pointerHeight);
-        }
-        this.ctx.closePath();
-        this.ctx.fill();
-        this.ctx.stroke();
-        
-        // Text
-        this.ctx.fillStyle = '#000000';
-        this.ctx.font = '8px "Press Start 2P", cursive';
-        this.ctx.textAlign = 'center';
-        this.ctx.fillText(text, bubbleX + width / 2, y + 20);
-    }
+'use client';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import styles from './GameScene.module.css';
+import PixelCard from '../components/PixelCard';
+import Settings from '../settings/Settings';
+import '@fontsource/dotgothic16';
+import questionsData from '@/data/questions.json';
+
+enum Nationality {
+    ROMANIAN = 'Romanian',
+    RUSSIAN = 'Russian',
+    BRITISH = 'British',
+    AMERICAN = 'American',
+    GERMAN = 'German',
+    FRENCH = 'French',
+    SPANISH = 'Spanish',
+    CHINA = 'Chinese',
+    MOLDOVAN = 'Moldovan',
+    TURK = 'Turkish'
+  }
+  
+  enum Language {
+    ENGLISH = 'English',
+    RUSSIAN = 'Russian',
+    ROMANIAN = 'Romanian',
+    TURKISH = 'Turkish',
+    GERMAN = 'German',
+    ITALIAN = 'Italian',
+    FRENCH = 'French',
+    SPANISH = 'Spanish',
+    CHINESE = 'Chinese',
+    JAPANESE = 'Japanese'
+  }
+
+interface Question {
+  question: string;
+  options: string[];
+  correct_answer: string;
 }
 
-// Initialize the scene when the page loads
-window.onload = () => {
-    const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
-    const gameScene = new GameScene(canvas);
-    gameScene.render();
+const FALLBACK_QUESTIONS: Question[] = [
+  {
+    question: "What is 5 + 7?",
+    options: ["10", "11", "12", "13"],
+    correct_answer: "12"
+  }
+];
+
+const GameScene = () => {
+  // Game state
+  const [questions, setQuestions] = useState<Question[]>(FALLBACK_QUESTIONS);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [score, setScore] = useState(0);
+  const [money, setMoney] = useState(100);
+  const [gameActive, setGameActive] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [rewardPopup, setRewardPopup] = useState({ show: false, amount: 0 });
+  const [showSettings, setShowSettings] = useState(false);
+
+    // Settings state
+  const [settings, setSettings] = useState({
+    soundEnabled: true,
+    age: '18',
+    nationality: Nationality.ROMANIAN,
+    language: Language.ENGLISH,
+    timerEnabled: true
+  });
+
+  // Load questions
+  useEffect(() => {
+    try {
+      const loadedQuestions = (questionsData as { questions: Question[] }).questions;
+      if (Array.isArray(loadedQuestions) && loadedQuestions.length > 0) {
+        setQuestions(loadedQuestions);
+        setError(null);
+      }
+    } catch (error) {
+      console.error('Error loading questions:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Timer countdown
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (gameActive && !loading && settings.timerEnabled) {
+      timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            handleTimeOut();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+  
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [gameActive, loading, settings.timerEnabled]);
+
+  const handleTimeOut = () => {
+    setGameActive(false);
+    setMoney(prev => Math.max(0, prev - 10));
+    nextQuestion();
+  };
+
+  const handleAnswer = (selectedOption: string) => {
+    if (!gameActive || loading) return;
+    
+    setSelectedAnswer(selectedOption);
+    const currentQuestion = questions[currentQuestionIndex];
+    const isCorrect = selectedOption === currentQuestion.correct_answer;
+    
+    if (isCorrect) {
+      // Calculate bonus based on timer setting
+      const timeBonus = settings.timerEnabled ? Math.floor(timeLeft * 2) : 0;
+      const answerReward = 50;
+      const total = answerReward + timeBonus;
+      
+      setScore(prev => prev + total);
+      setMoney(prev => prev + total);
+      setRewardPopup({ show: true, amount: total });
+    } else {
+      setMoney(prev => Math.max(0, prev - 20));
+    }
+    
+    setGameActive(false);
+    setTimeout(() => {
+      setRewardPopup({ show: false, amount: 0 });
+      nextQuestion();
+    }, 800);
+  };
+
+  const nextQuestion = () => {
+    setTimeout(() => {
+      setCurrentQuestionIndex(prev => (prev + 1) % questions.length);
+      // Reset timer only if it's enabled
+      if (settings.timerEnabled) {
+        setTimeLeft(30);
+      }
+      setGameActive(true);
+      setSelectedAnswer(null);
+    }, 500);
+  };
+
+  if (loading) return <div className={styles.loading}>Loading questions...</div>;
+
+  const currentQuestion = questions[currentQuestionIndex];
+  const correctAnswer = currentQuestion.correct_answer;
+
+  return (
+    <div className={styles.gameScene}>
+      {error && <div className={styles.errorMessage}>{error}</div>}
+      {rewardPopup.show && (
+        <div className={styles.rewardPopup}>
+          +${rewardPopup.amount}!
+        </div>
+      )}
+
+            {/* Settings Button */}
+    <button 
+        className={styles.settingsButton}
+        onClick={() => setShowSettings(true)}
+    >
+        <Image 
+          src="/icons/settings.png" 
+          width={24} 
+          height={24} 
+          alt="Settings" 
+        />
+    </button>
+      
+      {/* Settings Modal */}
+    {showSettings && (
+        <Settings
+            onClose={() => setShowSettings(false)}
+            onSave={(newSettings) => {
+                setSettings(newSettings);
+                setShowSettings(false);
+            }}
+            initialSettings={settings}
+        />
+    )}
+      
+      {/* Background Image */}
+      <div className={styles.backgroundContainer}>
+        <Image
+          src="/images/Background.png"
+          alt="Game Background"
+          fill
+          priority
+          quality={90}
+          style={{ objectFit: 'cover' }}
+        />
+      </div>
+      
+      {/* Game Status Bar */}
+      <div className={styles.statusBar}>
+        {settings.timerEnabled && (
+          <div className={`${styles.statusItem} ${timeLeft <= 5 ? styles.timeWarning : ''}`}>
+            <Image src="/icons/time.png" width={24} height={24} alt="Time" />
+            <span>{timeLeft}s</span>
+          </div>
+        )}
+        <div className={styles.statusItem}>
+          <Image src="/icons/score.png" width={24} height={24} alt="Score" />
+          <span>{score}</span>
+        </div>
+        <div className={styles.statusItem}>
+          <Image src="/icons/money.png" width={24} height={24} alt="Money" />
+          <span>${money}</span>
+        </div>
+      </div>
+      
+      {/* Question Box */}
+      <div className={styles.questionBoxContainer}>
+        <div className={styles.questionBoxImageWrapper}>
+          <Image
+            src="/images/QuestionBox.png"
+            alt="Question Box"
+            fill
+            quality={90}
+            style={{ objectFit: 'contain' }}
+          />
+        </div>
+        
+        <div className={styles.questionText}>{currentQuestion.question}</div>
+        
+        <div className={styles.answersContainer}>
+          {currentQuestion.options.map((option, index) => {
+            const isCorrect = option === correctAnswer;
+            const isSelected = option === selectedAnswer;
+            const showCorrect = !gameActive && isCorrect;
+            const showIncorrect = !gameActive && isSelected && !isCorrect;
+            
+            return (
+              <PixelCard 
+                key={index}
+                variant={showCorrect ? "blue" : showIncorrect ? "pink" : "default"}
+                className={`${styles.answerCard} ${!gameActive ? styles.disabled : ''}`}
+                onClick={() => handleAnswer(option)}
+              >
+                <div className={styles.answerText}>{option}</div>
+              </PixelCard>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 };
+
+export default GameScene;
