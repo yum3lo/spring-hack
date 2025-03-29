@@ -144,6 +144,17 @@ export default function Orb({
       float v2 = smoothstep(1.0, mix(innerRadius, 1.0, n0 * 0.5), len);
       float v3 = smoothstep(innerRadius, mix(innerRadius, 1.0, 0.5), len);
       
+      // Pixelation effect for outer parts
+      float pixelateFactor = smoothstep(innerRadius * 0.8, 1.0, len);
+      float pixelSize = 20.0; // Adjust for desired pixel size
+      if (pixelateFactor > 0.0) {
+        vec2 pixelatedUV = floor(uv * pixelSize) / pixelSize;
+        float pixelatedLen = length(pixelatedUV);
+        if (pixelatedLen > innerRadius) {
+          uv = mix(uv, pixelatedUV, pixelateFactor);
+        }
+      }
+      
       vec3 col = mix(color1, color2, cl);
       col = mix(color3, col, v0);
       col = (col + v1) * v2 * v3;

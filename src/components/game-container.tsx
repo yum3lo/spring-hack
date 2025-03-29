@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import PlanetGraph from './planet-graph';
-import { Settings } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import GameScene from '@/app/planets/gamescene';
 import { Planet, PlanetsData, Position } from '../types/planets';
+import Settings from '@/app/settings/Settings';
+import LoadingScreen from '@/app/components/loading-screen';
+import styles from '@/app/planets/GameScene.module.css';
+import { Questions } from '@/types/questions';
 
 const planetsData: PlanetsData = require('../data/planets.json');
 
@@ -33,9 +33,17 @@ export default function GameContainer() {
     isRocketMoving: false,
     visitedPlanets: []
   });
-
-  const [language, setLanguage] = useState('english');
-  const [ageGroup, setAgeGroup] = useState('5-7');
+  
+  const [showSettings, setShowSettings] = useState(false);
+  const [showGameScene, setShowGameScene] = useState(false);
+  const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false);
+  const [generatedQuestions, setGeneratedQuestions] = useState<
+    {
+      question: string;
+      options: string[];
+      correctAnswer: number;
+    }[]
+  >([]);
 
   const getAvailablePlanets = (): Planet[] => {
     if (!gameState.lastVisitedPlanet) {
@@ -109,6 +117,17 @@ export default function GameContainer() {
     });
   };
 
+  const handleStartAdventure = () => {
+    if (!gameState.currentPlanet) return;
+    setIsGeneratingQuestions(true);
+  };
+
+  const handleQuestionsGenerated = (questions: Questions) => {
+    setGeneratedQuestions(questions);
+    setIsGeneratingQuestions(false);
+    setShowGameScene(true);
+  };
+
   const returnToSpace = () => {
     animateRocket({ x: 50, y: 85 }, () => {
       setGameState(prev => ({
@@ -127,68 +146,24 @@ export default function GameContainer() {
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url("/bkg.png")' }} />
       <div className="absolute inset-0 bg-black/30" />
 
-      {/* Settings Button */}
-      <div className="absolute top-4 right-4 z-50">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full cursor-pointer bg-gray-800/80 hover:bg-gray-700/90 text-white hover:text-white h-10 w-10"
-              aria-label="Settings"
-            >
-              <Settings className="h-5 w-5" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-72 bg-gray-800/90 backdrop-blur-sm border-gray-700" align="end" sideOffset={8}>
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-white">Settings</h3>
-              <div className="space-y-2">
-                <Label htmlFor="language" className="text-gray-300">Language</Label>
-                <Select value={language} onValueChange={setLanguage}>
-                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 text-white border-gray-700">
-                    <SelectGroup>
-                      <SelectItem value="english">English</SelectItem>
-                      <SelectItem value="spanish">Spanish</SelectItem>
-                      <SelectItem value="french">French</SelectItem>
-                      <SelectItem value="german">German</SelectItem>
-                      <SelectItem value="russian">Russian</SelectItem>
-                      <SelectItem value="romanian">Romanian</SelectItem>
-                      <SelectItem value="turkish">Turkish</SelectItem>
-                      <SelectItem value="italian">Italian</SelectItem>
-                      <SelectItem value="chinese">Chinese</SelectItem>
-                      <SelectItem value="japanese">Japanese</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="age-group" className="text-gray-300">Age Group</Label>
-                <Select value={ageGroup} onValueChange={setAgeGroup}>
-                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                    <SelectValue placeholder="Select age group" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 text-white border-gray-700">
-                    <SelectGroup>
-                      <SelectItem value="5-7">5-7 years</SelectItem>
-                      <SelectItem value="8-10">8-10 years</SelectItem>
-                      <SelectItem value="11-13">11-13 years</SelectItem>
-                      <SelectItem value="14-16">14-16 years</SelectItem>
-                      <SelectItem value="17-20">17-20 years</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700">
-                Save Settings
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
+      {/* Settings */}
+      <button 
+        className={styles.settingsButton}
+        onClick={() => setShowSettings(true)}
+        aria-label="Open settings"
+      >
+        <Image 
+          src="/images/settings.png" 
+          width={80} 
+          height={80} 
+          alt="Settings" 
+        />
+      </button>
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <Settings onClose={() => setShowSettings(false)} />
+      )}
 
       {/* Rocket */}
       {gameState.currentScreen === 'space' && (
@@ -231,7 +206,7 @@ export default function GameContainer() {
       )}
         
       {/* Planet View */}
-      {gameState.currentScreen === 'planet' && gameState.currentPlanet && (
+      {gameState.currentScreen === 'planet' && gameState.currentPlanet && !showGameScene && !isGeneratingQuestions && (
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <div className="relative bg-gray-900/90 backdrop-blur-sm rounded-xl p-8 max-w-2xl mx-4 border border-white/10">
             <button 
@@ -261,13 +236,33 @@ export default function GameContainer() {
               
               <button 
                 className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 px-6 rounded-lg transition-colors cursor-pointer"
-                onClick={() => console.log('Start questions for', gameState.currentPlanet?.subject)}
+                onClick={handleStartAdventure}
               >
                 Start Learning Adventure
               </button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Loading Screen for Question Generation */}
+      {isGeneratingQuestions && gameState.currentPlanet && (
+        <LoadingScreen 
+          planet={gameState.currentPlanet}
+          onComplete={handleQuestionsGenerated}
+        />
+      )}
+
+      {/* GameScene */}
+      {showGameScene && gameState.currentPlanet && (
+        <GameScene 
+          planet={gameState.currentPlanet}
+          questions={generatedQuestions}
+          onClose={() => {
+            setShowGameScene(false);
+            setGeneratedQuestions([]);
+          }}
+        />
       )}
     </div>
   );

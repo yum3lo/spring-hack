@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { GeistSans, GeistMono } from "geist/font";
 import "./globals.css";
+import { SettingsProvider } from './contexts/SettingsContext';
+
 
 export const metadata: Metadata = {
   title: "Spring Hack",
@@ -20,7 +21,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body><SettingsProvider>
+          {children}
+        </SettingsProvider></body>
     </html>
   );
 }

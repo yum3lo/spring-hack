@@ -8,7 +8,8 @@
       "image": "/planets/biology.png",
       "connections": ["chemistry", "geography"],
       "position": { "x": 20, "y": 30 },
-      "size": 105
+      "size": 105,
+      "background": "/images/backgrounds/bio-bg.png"
     },
     {
       "id": "chemistry",
@@ -18,7 +19,8 @@
       "image": "/planets/chemistry.png",
       "connections": ["biology", "physics"],
       "position": { "x": 40, "y": 30 },
-      "size": 130
+      "size": 130,
+      "background": "/images/backgrounds/chem-bg.png"
     },
     {
       "id": "arts",
@@ -28,7 +30,8 @@
       "image": "/planets/arts.png",
       "connections": ["literature", "history"],
       "position": { "x": 70, "y": 20 },
-      "size": 135
+      "size": 135,
+      "background": "/images/backgrounds/art-bg.png"
     },
     {
       "id": "music",
@@ -38,7 +41,8 @@
       "image": "/planets/music.png",
       "connections": ["arts"],
       "position": { "x": 90, "y": 30 },
-      "size": 110
+      "size": 110,
+      "background": "/images/backgrounds/music-bg.png"
     },
     {
       "id": "physics",
@@ -48,7 +52,8 @@
       "image": "/planets/physics.png",
       "connections": ["chemistry", "mathematics"],
       "position": { "x": 40, "y": 80 },
-      "size": 120
+      "size": 120,
+      "background": "/images/backgrounds/phys-bg.png"
     },
     {
       "id": "computer",
@@ -58,7 +63,8 @@
       "image": "/planets/computer.png",
       "connections": ["mathematics"],
       "position": { "x": 80, "y": 70 },
-      "size": 90
+      "size": 90,
+      "background": "/images/backgrounds/compsci-bg.png"
     },
     {
       "id": "history",
@@ -68,7 +74,8 @@
       "image": "/planets/history.png",
       "connections": ["arts", "geography"],
       "position": { "x": 50, "y": 45 },
-      "size": 70
+      "size": 70,
+      "background": "/images/backgrounds/hist-bg.png"
     },
     {
       "id": "literature",
@@ -78,7 +85,8 @@
       "image": "/planets/literature.png",
       "connections": ["arts"],
       "position": { "x": 65, "y": 95 },
-      "size": 150
+      "size": 150,
+      "background": "/images/backgrounds/lit-bg.png"
     },
     {
       "id": "mathematics",
@@ -88,7 +96,8 @@
       "image": "/planets/mathematics.png",
       "connections": ["physics", "computer"],
       "position": { "x": 57, "y": 65 },
-      "size": 100
+      "size": 100,
+      "background": "/images/backgrounds/math-bg.png"
     },
     {
       "id": "geography",
@@ -98,7 +107,8 @@
       "image": "/planets/geography.png",
       "connections": ["biology", "history"],
       "position": { "x": 10, "y": 70 },
-      "size": 125
+      "size": 125,
+      "background": "/images/backgrounds/geo-bg.png"
     }
   ],
   "connections": [

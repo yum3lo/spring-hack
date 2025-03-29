@@ -1,0 +1,38 @@
+/* PixelCard.css */
+.pixel-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.pixel-card:hover {
+  transform: scale(1.02);
+}
+
+.pixel-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.pixel-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: clamp(22px, 2.5vw, 28px);
+  text-align: center;
+}
