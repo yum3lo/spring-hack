@@ -189,7 +189,7 @@
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.8);
   color: #4CAF50;
-  font-size: 2rem;
+  font-size: 3.5rem;
   font-family: 'DotGothic16', sans-serif;
   padding: 15px 30px;
   border-radius: 10px;
@@ -294,38 +294,35 @@
 
 .characterDisplay {
   position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  max-width: 600px;
+  top: 15%; /* Adjust this value to position characters exactly on top */
+  left: 20%;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   z-index: 10;
+  pointer-events: none; /* Allows clicks to pass through to elements below */
 }
 
 .astronautContainer {
-  margin-right: auto;
+  margin-left: -20px; /* Adjust to position astronaut */
 }
 
 .aliensContainer {
   display: flex;
-  gap: 10px;
+  gap: 5px;
+  margin-right: 20%; /* Adjust to position aliens */
 }
 
-.characterImage {
+.characterImage, .alienImage {
   object-fit: contain;
-  filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.7));
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
 }
 
-.alienImage {
-  object-fit: contain;
-  filter: drop-shadow(0 0 5px rgba(255, 0, 255, 0.7));
-}
 
 .questionBoxContainer {
   margin-top: 60px; /* Add space for the characters */
+  z-index: 12;
 }
 
 /* Responsive adjustments */

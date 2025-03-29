@@ -219,8 +219,8 @@ const GameScene = ({ planet, onClose}: GameSceneProps) => {
           <Image
             src="/images/Astronaut.png"
             alt="Astronaut"
-            width={100}
-            height={100}
+            width={140}
+            height={140}
             className={styles.characterImage}
           />
         </div>
@@ -228,8 +228,8 @@ const GameScene = ({ planet, onClose}: GameSceneProps) => {
           <Image
             src="/images/Alien 1.png"
             alt="Alien 1"
-            width={80}
-            height={80}
+            width={140}
+            height={140}
             className={styles.alienImage}
           />
         </div>
