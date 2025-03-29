@@ -8,7 +8,9 @@
       "image": "/planets/biology.png",
       "connections": ["chemistry", "geography"],
       "position": { "x": 20, "y": 30 },
-      "size": 105
+      "size": 105,
+      "bg": "/planet-bg/biology.png",
+      "alien": "/aliens/alien-red.png"
     },
     {
       "id": "chemistry",
@@ -18,7 +20,9 @@
       "image": "/planets/chemistry.png",
       "connections": ["biology", "physics"],
       "position": { "x": 40, "y": 30 },
-      "size": 130
+      "size": 130,
+      "bg": "/planet-bg/chemistry.png",
+      "alien": "/aliens/alien-green.png"
     },
     {
       "id": "arts",
@@ -28,7 +32,9 @@
       "image": "/planets/arts.png",
       "connections": ["literature", "history"],
       "position": { "x": 70, "y": 20 },
-      "size": 135
+      "size": 135,
+      "bg": "/planet-bg/arts.png",
+      "alien": "/aliens/alien-purple.png"
     },
     {
       "id": "music",
@@ -38,7 +44,9 @@
       "image": "/planets/music.png",
       "connections": ["arts"],
       "position": { "x": 90, "y": 30 },
-      "size": 110
+      "size": 110,
+      "bg": "/aliens/planet-bg/music.png",
+      "alien": "/aliens/alien-green.png"
     },
     {
       "id": "physics",
@@ -48,7 +56,9 @@
       "image": "/planets/physics.png",
       "connections": ["chemistry", "mathematics"],
       "position": { "x": 40, "y": 80 },
-      "size": 120
+      "size": 120,
+      "bg": "/planet-bg/physics.png",
+      "alien": "/aliens/alien-green.png"
     },
     {
       "id": "computer",
@@ -58,7 +68,9 @@
       "image": "/planets/computer.png",
       "connections": ["mathematics"],
       "position": { "x": 80, "y": 70 },
-      "size": 90
+      "size": 90,
+      "bg": "/planet-bg/computer.png",
+      "alien": "/aliens/alien-red.png"
     },
     {
       "id": "history",
@@ -68,7 +80,9 @@
       "image": "/planets/history.png",
       "connections": ["arts", "geography"],
       "position": { "x": 50, "y": 45 },
-      "size": 70
+      "size": 70,
+      "bg": "/planet-bg/history.png",
+      "alien": "/aliens/alien-red.png"
     },
     {
       "id": "literature",
@@ -78,7 +92,9 @@
       "image": "/planets/literature.png",
       "connections": ["arts"],
       "position": { "x": 65, "y": 95 },
-      "size": 150
+      "size": 150,
+      "bg": "/planet-bg/literature.png",
+      "alien": "/aliens/alien-green.png"
     },
     {
       "id": "mathematics",
@@ -88,7 +104,9 @@
       "image": "/planets/mathematics.png",
       "connections": ["physics", "computer"],
       "position": { "x": 57, "y": 65 },
-      "size": 100
+      "size": 100,
+      "bg": "/planet-bg/mathematics.png",
+      "alien": "/aliens/alien-purple.png"
     },
     {
       "id": "geography",
@@ -98,7 +116,9 @@
       "image": "/planets/geography.png",
       "connections": ["biology", "history"],
       "position": { "x": 10, "y": 70 },
-      "size": 125
+      "size": 125,
+      "bg": "/planet-bg/geography.png",
+      "alien": "/aliens/alien-purple.png"
     }
   ],
   "connections": [
