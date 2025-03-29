@@ -2,113 +2,103 @@
   "planets": [
     {
       "id": "biology",
-      "name": "Biology",
+      "name": "Bio-Bloom",
       "subject": "Biology",
       "color": "#4CAF50",
       "image": "/planets/biology.png",
       "connections": ["chemistry", "geography"],
       "position": { "x": 20, "y": 30 },
-      "size": 105,
-      "glowColor": "rgba(76, 175, 80, 0.3)"
+      "size": 105
     },
     {
       "id": "chemistry",
-      "name": "Chemistry",
+      "name": "Chemi-Crash",
       "subject": "Chemistry",
       "color": "#9C27B0",
       "image": "/planets/chemistry.png",
       "connections": ["biology", "physics"],
       "position": { "x": 40, "y": 30 },
-      "size": 130,
-      "glowColor": "rgba(156, 39, 176, 0.3)"
+      "size": 130
     },
     {
       "id": "arts",
-      "name": "Arts",
+      "name": "Artopia",
       "subject": "Arts",
       "color": "#E91E63",
       "image": "/planets/arts.png",
       "connections": ["literature", "history"],
       "position": { "x": 70, "y": 20 },
-      "size": 135,
-      "glowColor": "rgba(233, 30, 99, 0.3)"
+      "size": 135
     },
     {
       "id": "music",
-      "name": "Music",
+      "name": "Melodina",
       "subject": "Music",
       "color": "#FFC107",
       "image": "/planets/music.png",
       "connections": ["arts"],
       "position": { "x": 90, "y": 30 },
-      "size": 110,
-      "glowColor": "rgba(255, 193, 7, 0.3)"
+      "size": 110
     },
     {
       "id": "physics",
-      "name": "Physics",
+      "name": "Physi-Whiz",
       "subject": "Physics",
       "color": "#2196F3",
       "image": "/planets/physics.png",
       "connections": ["chemistry", "mathematics"],
       "position": { "x": 40, "y": 80 },
-      "size": 120,
-      "glowColor": "rgba(33, 150, 243, 0.3)"
+      "size": 120
     },
     {
       "id": "computer",
-      "name": "Computer Science",
+      "name": "Codex",
       "subject": "Computer Science",
       "color": "#3F51B5",
       "image": "/planets/computer.png",
       "connections": ["mathematics"],
       "position": { "x": 80, "y": 70 },
-      "size": 90,
-      "glowColor": "rgba(63, 81, 181, 0.3)"
+      "size": 90
     },
     {
       "id": "history",
-      "name": "History",
+      "name": "Historia",
       "subject": "History",
       "color": "#795548",
       "image": "/planets/history.png",
       "connections": ["arts", "geography"],
       "position": { "x": 50, "y": 45 },
-      "size": 70,
-      "glowColor": "rgba(121, 85, 72, 0.3)"
+      "size": 70
     },
     {
       "id": "literature",
-      "name": "Literature",
+      "name": "Lit-Verse",
       "subject": "Literature",
       "color": "#F44336",
       "image": "/planets/literature.png",
       "connections": ["arts"],
       "position": { "x": 65, "y": 95 },
-      "size": 150,
-      "glowColor": "rgba(244, 67, 54, 0.3)"
+      "size": 150
     },
     {
       "id": "mathematics",
-      "name": "Mathematics",
+      "name": "Mathster",
       "subject": "Mathematics",
       "color": "#607D8B",
       "image": "/planets/mathematics.png",
       "connections": ["physics", "computer"],
       "position": { "x": 57, "y": 65 },
-      "size": 100,
-      "glowColor": "rgba(96, 125, 139, 0.3)"
+      "size": 100
     },
     {
       "id": "geography",
-      "name": "Geography",
+      "name": "Geo-Rush",
       "subject": "Geography",
       "color": "#009688",
       "image": "/planets/geography.png",
       "connections": ["biology", "history"],
       "position": { "x": 10, "y": 70 },
-      "size": 125,
-      "glowColor": "rgba(0, 150, 136, 0.3)"
+      "size": 125
     }
   ],
   "connections": [
