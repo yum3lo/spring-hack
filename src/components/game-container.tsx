@@ -17,7 +17,9 @@ type GameState = {
   currentPlanet: Planet | null;
   lastVisitedPlanet: Planet | null;
   rocketPosition: Position;
+  rocketRotation: number;
   isRocketMoving: boolean;
+  visitedPlanets: string[];
 };
 
 export default function GameContainer() {
@@ -26,14 +28,15 @@ export default function GameContainer() {
     currentScreen: 'space',
     currentPlanet: null,
     lastVisitedPlanet: null,
-    rocketPosition: { x: 50, y: 90 },
+    rocketPosition: { x: 50, y: 85 },
+    rocketRotation: 0,
     isRocketMoving: false,
+    visitedPlanets: []
   });
 
   const [language, setLanguage] = useState('english');
   const [ageGroup, setAgeGroup] = useState('5-7');
 
-  // Get available planets based on last visited planet
   const getAvailablePlanets = (): Planet[] => {
     if (!gameState.lastVisitedPlanet) {
       return planetsData.planets;
@@ -47,17 +50,24 @@ export default function GameContainer() {
     );
   };
 
-  // Update rocket position using CSS transforms
-  useEffect(() => {
-    if (rocketRef.current) {
-      rocketRef.current.style.transform = `translate(calc(${gameState.rocketPosition.x}% - 50%), calc(${gameState.rocketPosition.y}% - 50%))`;
-    }
-  }, [gameState.rocketPosition]);
+  const calculateRotation = (start: Position, end: Position) => {
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    return Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+  };
 
   const animateRocket = (targetPosition: Position, onComplete: () => void) => {
     const startPosition = { ...gameState.rocketPosition };
     const duration = 1500;
     const startTime = performance.now();
+
+    const targetRotation = calculateRotation(startPosition, targetPosition);
+    
+    setGameState(prev => ({
+      ...prev,
+      rocketRotation: targetRotation,
+      isRocketMoving: true
+    }));
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
@@ -93,18 +103,20 @@ export default function GameContainer() {
         isRocketMoving: false,
         currentScreen: 'planet',
         currentPlanet: planet,
-        lastVisitedPlanet: planet
+        lastVisitedPlanet: planet,
+        visitedPlanets: [...prev.visitedPlanets, planet.id]
       }));
     });
   };
 
   const returnToSpace = () => {
-    animateRocket({ x: 50, y: 90 }, () => {
+    animateRocket({ x: 50, y: 85 }, () => {
       setGameState(prev => ({
         ...prev,
         isRocketMoving: false,
         currentScreen: 'space',
-        currentPlanet: null
+        currentPlanet: null,
+        rocketRotation: 0
       }));
     });
   };
@@ -122,7 +134,7 @@ export default function GameContainer() {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-gray-800/80 hover:bg-gray-700/90 text-white hover:text-white h-10 w-10"
+              className="rounded-full cursor-pointer bg-gray-800/80 hover:bg-gray-700/90 text-white hover:text-white h-10 w-10"
               aria-label="Settings"
             >
               <Settings className="h-5 w-5" />
@@ -137,12 +149,18 @@ export default function GameContainer() {
                   <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                     <SelectValue placeholder="Select language" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-gray-800 text-white border-gray-700">
                     <SelectGroup>
                       <SelectItem value="english">English</SelectItem>
                       <SelectItem value="spanish">Spanish</SelectItem>
                       <SelectItem value="french">French</SelectItem>
                       <SelectItem value="german">German</SelectItem>
+                      <SelectItem value="russian">Russian</SelectItem>
+                      <SelectItem value="romanian">Romanian</SelectItem>
+                      <SelectItem value="turkish">Turkish</SelectItem>
+                      <SelectItem value="italian">Italian</SelectItem>
+                      <SelectItem value="chinese">Chinese</SelectItem>
+                      <SelectItem value="japanese">Japanese</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -153,17 +171,18 @@ export default function GameContainer() {
                   <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                     <SelectValue placeholder="Select age group" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-gray-800 text-white border-gray-700">
                     <SelectGroup>
                       <SelectItem value="5-7">5-7 years</SelectItem>
                       <SelectItem value="8-10">8-10 years</SelectItem>
                       <SelectItem value="11-13">11-13 years</SelectItem>
-                      <SelectItem value="14+">14+ years</SelectItem>
+                      <SelectItem value="14-16">14-16 years</SelectItem>
+                      <SelectItem value="17-20">17-20 years</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+              <Button className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700">
                 Save Settings
               </Button>
             </div>
@@ -172,27 +191,27 @@ export default function GameContainer() {
       </div>
 
       {/* Rocket */}
-      <div 
-        ref={rocketRef}
-        className={`absolute z-20 w-12 h-24 transition-transform duration-300 will-change-transform ${
-          gameState.isRocketMoving ? 'animate-pulse' : ''
-        }`}
-        style={{
-          left: '50%',
-          top: '50%',
-          transform: 'translate(calc(50% - 50%), calc(90% - 50%))',
-        }}
-      >
-        <Image
-          src="/rocket.png"
-          alt="Rocket"
-          fill
-          className={`object-contain transition-transform duration-300 ${
-            gameState.isRocketMoving ? 'rotate-12' : 'rotate-0'
+      {gameState.currentScreen === 'space' && (
+        <div 
+          ref={rocketRef}
+          className={`absolute z-20 w-12 h-24 transition-transform duration-300 ${
+            gameState.isRocketMoving ? 'animate-pulse' : ''
           }`}
-          priority
-        />
-      </div>
+          style={{
+            left: `${gameState.rocketPosition.x}%`,
+            top: `${gameState.rocketPosition.y}%`,
+            transform: `translate(-50%, -50%) rotate(${gameState.rocketRotation}deg)`,
+          }}
+        >
+          <Image
+            src="/rocket.png"
+            alt="Rocket"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      )}
 
       {/* Planet Selection View */}
       {gameState.currentScreen === 'space' && (
@@ -210,20 +229,20 @@ export default function GameContainer() {
           </div>
         </div>
       )}
-
+        
       {/* Planet View */}
       {gameState.currentScreen === 'planet' && gameState.currentPlanet && (
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <div className="relative bg-gray-900/90 backdrop-blur-sm rounded-xl p-8 max-w-2xl mx-4 border border-white/10">
             <button 
               onClick={returnToSpace}
-              className="absolute top-4 right-4 text-white hover:text-yellow-300 transition-colors"
+              className="absolute cursor-pointer top-4 right-4 text-white hover:text-yellow-300 transition-colors"
             >
               ← Back to space
             </button>
             
             <div className="flex flex-col items-center">
-              <div className="relative w-32 h-32 mb-6">
+              <div className="relative w-32 h-32 my-6">
                 <Image
                   src={gameState.currentPlanet.image}
                   alt={gameState.currentPlanet.name}
@@ -240,17 +259,12 @@ export default function GameContainer() {
                 {gameState.currentPlanet.subject} Planet
               </p>
               
-              <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
-                <h3 className="text-xl font-semibold mb-4 text-center text-white">
-                  Ready to explore {gameState.currentPlanet.subject}?
-                </h3>
-                <button 
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 px-6 rounded-lg transition-colors"
-                  onClick={() => console.log('Start questions for', gameState.currentPlanet?.subject)}
-                >
-                  Start Learning Adventure
-                </button>
-              </div>
+              <button 
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 px-6 rounded-lg transition-colors cursor-pointer"
+                onClick={() => console.log('Start questions for', gameState.currentPlanet?.subject)}
+              >
+                Start Learning Adventure
+              </button>
             </div>
           </div>
         </div>

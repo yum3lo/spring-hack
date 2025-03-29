@@ -2,7 +2,7 @@
   "planets": [
     {
       "id": "biology",
-      "name": "Biology",
+      "name": "Bio-Bloom",
       "subject": "Biology",
       "color": "#4CAF50",
       "image": "/planets/biology.png",
@@ -12,7 +12,7 @@
     },
     {
       "id": "chemistry",
-      "name": "Chemistry",
+      "name": "Chemi-Crash",
       "subject": "Chemistry",
       "color": "#9C27B0",
       "image": "/planets/chemistry.png",
@@ -22,7 +22,7 @@
     },
     {
       "id": "arts",
-      "name": "Arts",
+      "name": "Artopia",
       "subject": "Arts",
       "color": "#E91E63",
       "image": "/planets/arts.png",
@@ -32,7 +32,7 @@
     },
     {
       "id": "music",
-      "name": "Music",
+      "name": "Melodina",
       "subject": "Music",
       "color": "#FFC107",
       "image": "/planets/music.png",
@@ -42,7 +42,7 @@
     },
     {
       "id": "physics",
-      "name": "Physics",
+      "name": "Physi-Whiz",
       "subject": "Physics",
       "color": "#2196F3",
       "image": "/planets/physics.png",
@@ -52,7 +52,7 @@
     },
     {
       "id": "computer",
-      "name": "Computer Science",
+      "name": "Codex",
       "subject": "Computer Science",
       "color": "#3F51B5",
       "image": "/planets/computer.png",
@@ -62,7 +62,7 @@
     },
     {
       "id": "history",
-      "name": "History",
+      "name": "Historia",
       "subject": "History",
       "color": "#795548",
       "image": "/planets/history.png",
@@ -72,7 +72,7 @@
     },
     {
       "id": "literature",
-      "name": "Literature",
+      "name": "Lit-Verse",
       "subject": "Literature",
       "color": "#F44336",
       "image": "/planets/literature.png",
@@ -82,7 +82,7 @@
     },
     {
       "id": "mathematics",
-      "name": "Mathematics",
+      "name": "Mathster",
       "subject": "Mathematics",
       "color": "#607D8B",
       "image": "/planets/mathematics.png",
@@ -92,7 +92,7 @@
     },
     {
       "id": "geography",
-      "name": "Geography",
+      "name": "Geo-Rush",
       "subject": "Geography",
       "color": "#009688",
       "image": "/planets/geography.png",
