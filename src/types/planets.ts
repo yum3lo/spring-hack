@@ -10,6 +10,8 @@ export type Planet = {
   position: Position;
   size: number;
   glowColor: string;
+  bg: string;
+  alien: string;
 };
 
 export type PlanetsData = {

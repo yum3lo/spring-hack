@@ -13,7 +13,7 @@ import { Planet, PlanetsData, Position } from '../types/planets';
 const planetsData: PlanetsData = require('../data/planets.json');
 
 type GameState = {
-  currentScreen: 'space' | 'planet' | 'loading';
+  currentScreen: 'space' | 'planet' | 'loading' | 'planetView';
   currentPlanet: Planet | null;
   lastVisitedPlanet: Planet | null;
   rocketPosition: Position;
@@ -128,16 +128,36 @@ export default function GameContainer() {
       console.log('Loading complete - start questions for', gameState.currentPlanet?.subject);
       setGameState(prev => ({
         ...prev,
+        currentScreen: 'planetView'
+      }));
+    }, 2000);
+  }
+
+  const goBack = () => {
+    setGameState(prev => ({
+      ...prev,
+      currentScreen: 'loading'
+    }));
+  
+    setTimeout(() => {
+      setGameState(prev => ({
+        ...prev,
         currentScreen: 'planet'
       }));
-    }, 3000);
-  }
+    }, 2000);
+  };
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
-      {/* Background Image */}
+      
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url("/bkg.png")' }} />
       <div className="absolute inset-0 bg-black/30" />
+      
+
+      {/* Planet Background */}
+      {gameState.currentScreen === 'planetView' && gameState.currentPlanet && (
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url("${gameState.currentPlanet.bg}")` }} />
+      )}
 
       {/* Settings Button */}
       <div className="absolute top-4 right-4 z-50">
@@ -242,19 +262,6 @@ export default function GameContainer() {
         </div>
       )}
       
-      {/* Loading Screen */}
-      {gameState.currentScreen === 'loading' && (
-        <Image
-          src="/loading-screen.gif"
-          alt="Loading..."
-          fill
-          className="object-contain"
-          unoptimized
-          priority
-        />
-      )}
-
-      {/* Planet View */}
       {gameState.currentScreen === 'planet' && gameState.currentPlanet && (
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <div className="relative bg-gray-900/90 backdrop-blur-sm rounded-xl p-8 max-w-2xl mx-4 border border-white/10">
@@ -290,6 +297,65 @@ export default function GameContainer() {
                 Start Learning Adventure
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Loading Screen */}
+      {gameState.currentScreen === 'loading' && (
+        
+        <Image
+          src="/loading-screen.gif"
+          alt="Loading..."
+          fill
+          className="object-contain"
+          unoptimized
+          priority
+        />
+      
+      )}
+
+      {gameState.currentScreen === 'planetView' && gameState.currentPlanet && (
+        <div className="relative h-full">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${gameState.currentPlanet.bg})` }}
+          />
+          
+          <div className="absolute top-0 left-0 right-0 z-40 py-3 px-4">
+            <div className="max-w-4xl mx-auto flex items-center justify-between">
+              <h1 className="text-2xl font-bold text-white">
+                {gameState.currentPlanet.name}
+              </h1>
+              <button onClick={goBack} className="cursor-pointer text-white hover:text-yellow-300">
+                ← Back
+              </button>
+            </div>
+          </div>
+
+          <div className="absolute inset-0 flex items-end justify-between z-30">
+            {/* Astronaut on left - bust up */}
+            <div className="relative w-64 h-[70vh] ml-40 mb-16">
+              <Image
+                src="/astronaut.png"
+                alt="Astronaut"
+                fill
+                className="object-contain object-bottom animate-float"
+              />
+            </div>
+
+            {/* Alien on right - bust up */}
+            <div className="relative w-64 h-[70vh] mr-4 mb-16">
+              <Image
+                src={gameState.currentPlanet.alien}
+                alt="Alien"
+                fill
+                className="object-contain object-bottom animate-float"
+              />
+            </div>
+          </div>
+
+          <div className="absolute top-16 bottom-0 left-0 right-0 flex items-center justify-center">
           </div>
         </div>
       )}
