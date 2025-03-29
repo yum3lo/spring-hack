@@ -2,18 +2,44 @@
 
 import { useState } from 'react';
 import Orb from '@/components/orb/Orb';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [dob, setDob] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
+  
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Registering:', { username, email, dob, password });
+  
+    try {
+      const response = await fetch('http://localhost:8080/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Registration failed');
+      }
+  
+      const data = await response.json();
+      const token = data.token || data.accessToken || data;
+  
+      console.log(' Registered! Token:', token);
+  
+      localStorage.setItem('token', token);
+  
+      router.push('/game');
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try a different username.');
+    }
   };
-
+  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black relative overflow-hidden">
       <div style={{ width: '100%', height: '600px', position: 'relative' }}>
