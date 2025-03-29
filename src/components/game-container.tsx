@@ -36,6 +36,7 @@ export default function GameContainer() {
   
   const [showSettings, setShowSettings] = useState(false);
   const [showGameScene, setShowGameScene] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false);
   const [generatedQuestions, setGeneratedQuestions] = useState<
     {

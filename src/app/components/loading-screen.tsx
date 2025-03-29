@@ -7,9 +7,7 @@ import { Questions} from '@/types/questions';
 import { useSettings } from '@/app/contexts/SettingsContext';
 
 interface LoadingScreenProps {
-interface LoadingScreenProps {
   planet: Planet;
-  loadingMessage?: string;
   loadingMessage?: string;
   onComplete: (questions: Questions) => void;
   onBack?: () => void;
@@ -44,9 +42,6 @@ export default function LoadingScreen({
         }, 50);
 
         // Create the prompt
-        const prompt = `Generate 10 multiple choice questions about ${planet.subject} 
-        for a ${age} year old ${nationality} student in ${language}. 
-        Format as JSON with question, options, and correctAnswer.`;
         const prompt = `Generate 10 multiple choice questions about ${planet.subject} 
         for a ${age} year old ${nationality} student in ${language}. 
         Format as JSON with question, options, and correctAnswer.`;
