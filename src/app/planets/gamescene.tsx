@@ -4,34 +4,9 @@ import Image from 'next/image';
 import styles from './GameScene.module.css';
 import PixelCard from '../components/PixelCard';
 import Settings from '../settings/Settings';
+import { useSettings } from '../contexts/SettingsContext';
 import '@fontsource/dotgothic16';
 import questionsData from '@/data/questions.json';
-
-enum Nationality {
-    ROMANIAN = 'Romanian',
-    RUSSIAN = 'Russian',
-    BRITISH = 'British',
-    AMERICAN = 'American',
-    GERMAN = 'German',
-    FRENCH = 'French',
-    SPANISH = 'Spanish',
-    CHINA = 'Chinese',
-    MOLDOVAN = 'Moldovan',
-    TURK = 'Turkish'
-  }
-  
-  enum Language {
-    ENGLISH = 'English',
-    RUSSIAN = 'Russian',
-    ROMANIAN = 'Romanian',
-    TURKISH = 'Turkish',
-    GERMAN = 'German',
-    ITALIAN = 'Italian',
-    FRENCH = 'French',
-    SPANISH = 'Spanish',
-    CHINESE = 'Chinese',
-    JAPANESE = 'Japanese'
-  }
 
 interface Question {
   question: string;
@@ -44,11 +19,16 @@ const FALLBACK_QUESTIONS: Question[] = [
     question: "What is 5 + 7?",
     options: ["10", "11", "12", "13"],
     correct_answer: "12"
+  },
+  {
+    question: "What is 9 - 4?",
+    options: ["5", "6", "7", "8"],
+    correct_answer: "5"
   }
 ];
 
 const GameScene = () => {
-  // Game state
+  const { settings } = useSettings();
   const [questions, setQuestions] = useState<Question[]>(FALLBACK_QUESTIONS);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
@@ -61,15 +41,6 @@ const GameScene = () => {
   const [rewardPopup, setRewardPopup] = useState({ show: false, amount: 0 });
   const [showSettings, setShowSettings] = useState(false);
 
-    // Settings state
-  const [settings, setSettings] = useState({
-    soundEnabled: true,
-    age: '18',
-    nationality: Nationality.ROMANIAN,
-    language: Language.ENGLISH,
-    timerEnabled: true
-  });
-
   // Load questions
   useEffect(() => {
     try {
@@ -77,15 +48,18 @@ const GameScene = () => {
       if (Array.isArray(loadedQuestions) && loadedQuestions.length > 0) {
         setQuestions(loadedQuestions);
         setError(null);
+      } else {
+        setQuestions(FALLBACK_QUESTIONS);
       }
     } catch (error) {
       console.error('Error loading questions:', error);
+      setQuestions(FALLBACK_QUESTIONS);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Timer countdown
+  // Timer countdown (respects timer setting)
   useEffect(() => {
     let timer: NodeJS.Timeout;
     
@@ -93,7 +67,6 @@ const GameScene = () => {
       timer = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
-            clearInterval(timer);
             handleTimeOut();
             return 0;
           }
@@ -101,7 +74,7 @@ const GameScene = () => {
         });
       }, 1000);
     }
-  
+
     return () => {
       if (timer) clearInterval(timer);
     };
@@ -121,7 +94,6 @@ const GameScene = () => {
     const isCorrect = selectedOption === currentQuestion.correct_answer;
     
     if (isCorrect) {
-      // Calculate bonus based on timer setting
       const timeBonus = settings.timerEnabled ? Math.floor(timeLeft * 2) : 0;
       const answerReward = 50;
       const total = answerReward + timeBonus;
@@ -129,21 +101,30 @@ const GameScene = () => {
       setScore(prev => prev + total);
       setMoney(prev => prev + total);
       setRewardPopup({ show: true, amount: total });
+      
+      // Play sound if enabled
+      if (settings.soundEnabled) {
+        // new Audio('/sounds/correct.mp3').play();
+      }
     } else {
       setMoney(prev => Math.max(0, prev - 20));
+      
+      // Play sound if enabled
+      if (settings.soundEnabled) {
+        // new Audio('/sounds/wrong.mp3').play();
+      }
     }
     
     setGameActive(false);
     setTimeout(() => {
       setRewardPopup({ show: false, amount: 0 });
       nextQuestion();
-    }, 800);
+    }, 1500);
   };
 
   const nextQuestion = () => {
     setTimeout(() => {
       setCurrentQuestionIndex(prev => (prev + 1) % questions.length);
-      // Reset timer only if it's enabled
       if (settings.timerEnabled) {
         setTimeLeft(30);
       }
@@ -152,7 +133,9 @@ const GameScene = () => {
     }, 500);
   };
 
-  if (loading) return <div className={styles.loading}>Loading questions...</div>;
+  if (loading) {
+    return <div className={styles.loading}>Loading questions...</div>;
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
   const correctAnswer = currentQuestion.correct_answer;
@@ -165,31 +148,25 @@ const GameScene = () => {
           +${rewardPopup.amount}!
         </div>
       )}
-
-            {/* Settings Button */}
-    <button 
+      
+      {/* Settings Button */}
+      <button 
         className={styles.settingsButton}
         onClick={() => setShowSettings(true)}
-    >
+        aria-label="Open settings"
+      >
         <Image 
           src="/icons/settings.png" 
-          width={24} 
-          height={24} 
+          width={30} 
+          height={30} 
           alt="Settings" 
         />
-    </button>
+      </button>
       
       {/* Settings Modal */}
-    {showSettings && (
-        <Settings
-            onClose={() => setShowSettings(false)}
-            onSave={(newSettings) => {
-                setSettings(newSettings);
-                setShowSettings(false);
-            }}
-            initialSettings={settings}
-        />
-    )}
+      {showSettings && (
+        <Settings onClose={() => setShowSettings(false)} />
+      )}
       
       {/* Background Image */}
       <div className={styles.backgroundContainer}>
@@ -250,6 +227,9 @@ const GameScene = () => {
                 onClick={() => handleAnswer(option)}
               >
                 <div className={styles.answerText}>{option}</div>
+                {showCorrect && (
+                  <div className={styles.correctIndicator}>✓</div>
+                )}
               </PixelCard>
             );
           })}

@@ -9,16 +9,18 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(5px);
   }
   
   .settingsContainer {
     background-color: #2a2a2a;
     padding: 2rem;
-    border-radius: 10px;
+    border-radius: 15px;
     width: 90%;
     max-width: 500px;
     position: relative;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
   }
   
   .closeButton {
@@ -27,10 +29,12 @@
     right: 1rem;
     background: none;
     border: none;
-    font-size: 1.5rem;
-    color: #ccc;
+    font-size: 1.8rem;
+    color: #aaa;
     cursor: pointer;
     transition: color 0.2s;
+    line-height: 1;
+    padding: 0.5rem;
   }
   
   .closeButton:hover {
@@ -40,110 +44,129 @@
   .settingsTitle {
     color: #fff;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     font-family: 'DotGothic16', sans-serif;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   }
   
   .settingsForm {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.8rem;
   }
   
   .settingRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
   }
   
   .settingLabel {
     color: #fff;
-    font-size: 1rem;
-    margin-right: 1rem;
+    font-size: 1.1rem;
+    flex: 1;
   }
   
-  .selectInput {
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid #444;
-    background-color: #333;
-    color: #fff;
-    width: 150px;
-  }
-  
-  .toggleSwitch {
+  .switch {
     position: relative;
     display: inline-block;
-    width: 50px;
-    height: 24px;
+    width: 60px;
+    height: 34px;
   }
   
-  .toggleSwitch input {
+  .switch input {
     opacity: 0;
     width: 0;
     height: 0;
   }
   
-/* Toggle Switch Styles */
-.toggleContainer {
-    width: 50px;
-    height: 24px;
-    background-color: #ccc;
-    border-radius: 12px;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-  
-.toggleContainer.active {
-    background-color: #4CAF50;
-}
-  
-.toggleKnob {
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    border-radius: 50%;
+  .slider {
     position: absolute;
-    top: 2px;
-    left: 2px;
-    transition: transform 0.3s;
-}
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
   
-.toggleContainer.active .toggleKnob {
-    transform: translateX(26px);
-}
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
   
-/* Make sure no other styles are overriding these */
-.toggleContainer input[type="checkbox"] {
-    display: none; /* Hide the default checkbox */
-}
-  
-input:checked + .slider {
+  input:checked + .slider {
     background-color: #4CAF50;
-}
+  }
   
-input:checked + .slider:before {
+  input:checked + .slider:before {
     transform: translateX(26px);
-}
+  }
   
-.buttonContainer {
+  /* Focus states for accessibility */
+  input:focus + .slider {
+    box-shadow: 0 0 1px #4CAF50;
+  }
+  
+  .selectInput {
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: #fff;
+    width: 150px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .selectInput:hover {
+    border-color: #666;
+  }
+  
+  .selectInput:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+  }
+  
+  .buttonContainer {
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
-}
+    margin-top: 1.5rem;
+  }
   
-.saveButton {
+  .saveButton {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-}
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    font-family: 'DotGothic16', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
   
-.saveButton:hover {
+  .saveButton:hover {
     background-color: #45a049;
-}
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .saveButton:active {
+    transform: translateY(0);
+  }

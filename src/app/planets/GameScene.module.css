@@ -196,6 +196,12 @@
   animation: popIn 0.5s, fadeOut 0.5s 1.5s forwards;
 }
 
+.wrongAnswer {
+  background-color: #f44336 !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(244, 67, 54, 0.7);
+}
+
 @keyframes popIn {
   0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
   80% { transform: translateX(-50%) scale(1.1); }
