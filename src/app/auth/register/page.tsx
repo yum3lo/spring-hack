@@ -33,7 +33,7 @@ export default function RegisterPage() {
   
       localStorage.setItem('token', token);
   
-      router.push('/game');
+      router.push('/auth/login');
     } catch (error) {
       console.error('Registration error:', error);
       alert('Registration failed. Please try a different username.');
