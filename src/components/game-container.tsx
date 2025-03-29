@@ -13,13 +13,12 @@ import { Planet, PlanetsData, Position } from '../types/planets';
 const planetsData: PlanetsData = require('../data/planets.json');
 
 type GameState = {
-  currentScreen: 'space' | 'planet';
+  currentScreen: 'space' | 'planet' | 'loading';
   currentPlanet: Planet | null;
   lastVisitedPlanet: Planet | null;
   rocketPosition: Position;
   rocketRotation: number;
   isRocketMoving: boolean;
-  visitedPlanets: string[];
 };
 
 export default function GameContainer() {
@@ -30,8 +29,7 @@ export default function GameContainer() {
     lastVisitedPlanet: null,
     rocketPosition: { x: 50, y: 85 },
     rocketRotation: 0,
-    isRocketMoving: false,
-    visitedPlanets: []
+    isRocketMoving: false
   });
 
   const [language, setLanguage] = useState('english');
@@ -103,8 +101,7 @@ export default function GameContainer() {
         isRocketMoving: false,
         currentScreen: 'planet',
         currentPlanet: planet,
-        lastVisitedPlanet: planet,
-        visitedPlanets: [...prev.visitedPlanets, planet.id]
+        lastVisitedPlanet: planet
       }));
     });
   };
@@ -120,6 +117,21 @@ export default function GameContainer() {
       }));
     });
   };
+
+  const startLearningAdventure = () => {
+    setGameState(prev => ({
+      ...prev,
+      currentScreen: 'loading'
+    }));
+    
+    setTimeout(() => {
+      console.log('Loading complete - start questions for', gameState.currentPlanet?.subject);
+      setGameState(prev => ({
+        ...prev,
+        currentScreen: 'planet'
+      }));
+    }, 3000);
+  }
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -229,7 +241,19 @@ export default function GameContainer() {
           </div>
         </div>
       )}
-        
+      
+      {/* Loading Screen */}
+      {gameState.currentScreen === 'loading' && (
+        <Image
+          src="/loading-screen.gif"
+          alt="Loading..."
+          fill
+          className="object-contain"
+          unoptimized
+          priority
+        />
+      )}
+
       {/* Planet View */}
       {gameState.currentScreen === 'planet' && gameState.currentPlanet && (
         <div className="absolute inset-0 z-10 flex items-center justify-center">
@@ -261,7 +285,7 @@ export default function GameContainer() {
               
               <button 
                 className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 px-6 rounded-lg transition-colors cursor-pointer"
-                onClick={() => console.log('Start questions for', gameState.currentPlanet?.subject)}
+                onClick={startLearningAdventure}
               >
                 Start Learning Adventure
               </button>
